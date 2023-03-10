@@ -2,3 +2,80 @@
     name: train-model
     command: python train.py
     image: tensorflow/tensorflow:2.6.0
+
+- step:
+    name: mpi-01-greeting
+    image: python:3.9.12-bullseye
+    command:
+      - ls
+      - pip install -y valohai-cli valohai-utils
+      - echo "Done"
+      - pip install -r mpi_examples/requirements.txt --disable-pip-version-check
+      - echo "Done"
+      - python mpi_examples/run_mpirun.py python mpi_examples/01_greeting.py
+    environment-variables:
+      - name: VH_DOCKER_NETWORK
+        default: host
+
+- step:
+    name: mpi-02-parse-distributed-config
+    description: Parse, validate and print Valohai distributed task configuration.
+    image: python:3.9.12-bullseye
+    command:
+      - apt-get -yqq update
+      - apt-get -yqq --no-install-recommends install openmpi-bin openssh-server
+      - pip install -r mpi_examples/requirements.txt --disable-pip-version-check -q
+      - python mpi_examples/run_mpirun.py python mpi_examples/02_parse_distributed_config.py
+    environment-variables:
+      - name: VH_DOCKER_NETWORK
+        default: host
+
+- step:
+    name: pytorch-01-gloo-sum
+    image: pytorch/pytorch:1.11.0-cuda11.3-cudnn8-runtime
+    command:
+      - pip install -r pytorch_examples/requirements.txt --disable-pip-version-check
+      - python pytorch_examples/01_gloo_sum.py
+    environment-variables:
+      - name: VH_DOCKER_NETWORK
+        default: "host"
+
+- step:
+    name: pytorch-02-nccl-sum
+    image: pytorch/pytorch:1.11.0-cuda11.3-cudnn8-runtime
+    command:
+      - pip install -r pytorch_examples/requirements.txt --disable-pip-version-check -q
+      - python pytorch_examples/02_nccl_sum.py
+    environment-variables:
+      - name: VH_DOCKER_NETWORK
+        default: host
+
+- step:
+    name: pytorch-04-gloo-mnist
+    image: pytorch/pytorch:1.11.0-cuda11.3-cudnn8-runtime
+    command:
+      - pip install -r pytorch_examples/requirements.txt --disable-pip-version-check -q
+      - python pytorch_examples/04_gloo_mnist.py
+    environment-variables:
+      - name: VH_DOCKER_NETWORK
+        default: host
+
+- step:
+    name: tensorflow-01-ring-mnist
+    image: tensorflow/tensorflow:2.9.1
+    command:
+      - pip install -r tensorflow_examples/requirements.txt --disable-pip-version-check -q
+      - python tensorflow_examples/01_ring_mnist.py
+    environment-variables:
+      - name: VH_DOCKER_NETWORK
+        default: host
+
+- step:
+    name: tensorflow-02-nccl-mnist
+    image: tensorflow/tensorflow:2.9.1-gpu
+    command:
+      - pip install -r tensorflow_examples/requirements.txt --disable-pip-version-check -q
+      - python tensorflow_examples/02_nccl_mnist.py
+    environment-variables:
+      - name: VH_DOCKER_NETWORK
+        default: host
