@@ -2,8 +2,7 @@
     name: train-model
     image: tensorflow/tensorflow:2.6.0
     command:
-    - pip install -r requirements.txt
-    - python ./train.py {parameters}
+    - python train.py {parameters}
     parameters:
     - name: max_steps
       default: 300

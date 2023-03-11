@@ -8,7 +8,7 @@ my_parameters = {
    'dropout': 0.2,
 }
  
-valohai.prepare(step="helloworld", default_parameters=my_parameters)
+valohai.prepare(step="train-model", default_parameters=my_parameters)
  
 input_path = 'mnist.npz'
 with np.load(input_path, allow_pickle=True) as f:

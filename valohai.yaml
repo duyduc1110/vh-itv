@@ -2,6 +2,7 @@
     name: train-model
     image: tensorflow/tensorflow:2.6.0
     command:
+    - pip install -r tensorflow_examples/requirements.txt --disable-pip-version-check
     - python train.py {parameters}
     parameters:
     - name: max_steps
